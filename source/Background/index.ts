@@ -113,7 +113,7 @@ async function shortenUrl({
       error: false,
       data,
     };
-  } catch (err) {
+  } catch (err: any) {
     if (err.response) {
       if (err.response.status === 401) {
         return {
@@ -201,7 +201,7 @@ async function checkApiKey({
       error: false,
       data,
     };
-  } catch (err) {
+  } catch (err: any) {
     if (err.response) {
       if (err.response.status === 401) {
         return {
@@ -283,7 +283,7 @@ async function fetchUrlsHistory({
       error: false,
       data,
     };
-  } catch (err) {
+  } catch (err: any) {
     if (err.response) {
       if (err.response.status === 401) {
         return {
