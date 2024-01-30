@@ -5,7 +5,7 @@ const TerserPlugin = require('terser-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const {CleanWebpackPlugin} = require('clean-webpack-plugin');
-const ExtensionReloader = require('webpack-extension-reloader');
+const ExtensionReloader = require('webpack-ext-reloader');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const WextManifestWebpackPlugin = require('wext-manifest-webpack-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
@@ -18,19 +18,19 @@ const nodeEnv = process.env.NODE_ENV || 'development';
 const targetBrowser = process.env.TARGET_BROWSER;
 
 const extensionReloaderPlugin =
-    nodeEnv === 'development'
-        ? new ExtensionReloader({
-          port: 9128,
-          reloadPage: true,
-          entries: {
-            // TODO: reload manifest on update
-            background: 'background',
-            extensionPage: ['popup', 'options', 'history'],
-          },
-        })
-        : () => {
-          this.apply = () => {};
-        };
+  nodeEnv === 'development'
+    ? new ExtensionReloader({
+        port: 9128,
+        reloadPage: true,
+        entries: {
+          // TODO: reload manifest on update
+          background: 'background',
+          extensionPage: ['popup', 'options', 'history'],
+        },
+      })
+    : () => {
+        this.apply = () => {};
+      };
 
 const getExtensionFileType = (browser) => {
   if (browser === 'opera') {
@@ -73,7 +73,7 @@ module.exports = {
     extensions: ['.ts', '.tsx', '.js', '.json'],
     alias: {
       'webextension-polyfill-ts': path.resolve(
-          path.join(__dirname, 'node_modules', 'webextension-polyfill-ts')
+        path.join(__dirname, 'node_modules', 'webextension-polyfill-ts')
       ),
     },
   },
@@ -143,8 +143,8 @@ module.exports = {
       cleanOnceBeforeBuildPatterns: [
         path.join(process.cwd(), `extension/${targetBrowser}`),
         path.join(
-            process.cwd(),
-            `extension/${targetBrowser}.${getExtensionFileType(targetBrowser)}`
+          process.cwd(),
+          `extension/${targetBrowser}.${getExtensionFileType(targetBrowser)}`
         ),
       ],
       cleanStaleWebpackAssets: false,
