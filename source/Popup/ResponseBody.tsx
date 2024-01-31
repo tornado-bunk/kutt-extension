@@ -38,7 +38,7 @@ const ResponseBody: React.FC = () => {
 
   // reset copy message
   useEffect(() => {
-    let timer: NodeJS.Timeout | null = null;
+    let timer: unknown = null;
 
     timer = setTimeout(() => {
       setCopied(false);
@@ -46,7 +46,7 @@ const ResponseBody: React.FC = () => {
 
     return (): void => {
       if (timer) {
-        clearTimeout(timer);
+        clearTimeout(timer as never);
       }
     };
   }, [copied]);

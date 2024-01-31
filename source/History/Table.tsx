@@ -43,7 +43,7 @@ const Table: React.FC = () => {
 
   // reset copy message
   useEffect(() => {
-    let timer: NodeJS.Timeout | null = null;
+    let timer: unknown = null;
 
     timer = setTimeout(() => {
       setCopied(false);
@@ -52,7 +52,7 @@ const Table: React.FC = () => {
 
     return (): void => {
       if (timer) {
-        clearTimeout(timer);
+        clearTimeout(timer as never);
       }
     };
   }, [copied]);
