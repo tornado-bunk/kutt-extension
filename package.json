@@ -1,7 +1,7 @@
 {
   "name": "kutt-extension",
-  "version": "4.3.0-beta.2",
-  "description": "Kutt.it extension for browsers.",
+  "version": "4.3.0-beta.3.aihelped",
+  "description": "Kutt.it extension for browsers with AI compatibility fixes for custom and self-hosted Kutt instances.",
   "license": "MIT",
   "repository": "https://github.com/thedevs-network/kutt-extension.git",
   "author": {
@@ -9,6 +9,12 @@
     "email": "email@abhijithvijayan.in",
     "url": "https://abhijithvijayan.in"
   },
+  "contributors": [
+    {
+      "name": "AI Assisted Update",
+      "url": "https://github.com/thedevs-network/kutt-extension"
+    }
+  ],
   "engines": {
     "node": ">=10.0.0",
     "yarn": ">=1.0.0"
