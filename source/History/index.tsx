@@ -11,7 +11,7 @@ import {ShortenedLinksProvider} from '../contexts/shortened-links-context';
 import {RequestStatusProvider} from '../contexts/request-status-context';
 
 // eslint-disable-next-line import/no-webpack-loader-syntax, import/no-unresolved,  @typescript-eslint/no-var-requires, node/no-missing-require
-const theme = require('sass-extract-loader?{"plugins": ["sass-extract-js"]}!../styles/base/_variables.scss');
+import theme from '../styles/base/_variables.module.scss';
 // Require sass variables using sass-extract-loader and specify the plugin
 
 ReactDOM.render(

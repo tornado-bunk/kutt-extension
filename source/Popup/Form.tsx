@@ -99,12 +99,15 @@ const Form: React.FC = () => {
       isUndefined(formStateErrors.password)) ||
     false;
 
+  const filteredDomainOptions = domainOptions.map(option => ({
+    ...option,
+    disabled: option.id !== CONSTANTS.DefaultDomainId // Consenti solo il dominio predefinito
+  }));
+
   async function handleFormSubmit({
     customurl,
     password,
-    domain,
   }: {
-    domain: string;
     customurl: string;
     password: string;
   }): Promise<void> {
@@ -133,10 +136,9 @@ const Form: React.FC = () => {
     const apiBody: ApiBodyProperties = {
       apikey: extensionSettingsState.apikey,
       target: target as unknown as string,
-      ...(customurl.trim() !== EMPTY_STRING && {customurl: customurl.trim()}), // add key only if field is not empty
+      ...(customurl.trim() !== EMPTY_STRING && {customurl: customurl.trim()}),
       ...(!isEmpty(password) && {password}),
       reuse: false,
-      ...(domain.trim() !== EMPTY_STRING && {domain: domain.trim()}),
     };
 
     const apiShortenUrlBody: ShortUrlActionBodyProperties = {
@@ -164,13 +166,18 @@ const Form: React.FC = () => {
       });
     } else {
       // errored
+      const errorMsg = typeof response.message === 'string' 
+        ? response.message 
+        : 'Errore durante l\'accorciamento dell\'URL. Controlla la chiave API e l\'URL.';
+      
       requestStatusDispatch({
         type: RequestStatusActionTypes.SET_REQUEST_STATUS,
         payload: {
           error: true,
-          message: response.message,
+          message: errorMsg,
         },
       });
+      console.error('Error response:', response);
     }
   }
 
@@ -217,7 +224,7 @@ const Form: React.FC = () => {
                 tw`sm:text-base focus:border-indigo-400 focus:outline-none relative w-full px-2 py-2 text-sm placeholder-gray-400 bg-gray-200 border rounded`,
               ]}
             >
-              {domainOptions.map(({id, option, value, disabled = false}) => {
+              {filteredDomainOptions.map(({id, option, value, disabled = false}) => {
                 return (
                   <option
                     tw="bg-gray-200 "

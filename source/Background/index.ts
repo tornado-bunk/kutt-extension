@@ -88,71 +88,58 @@ export type SuccessfulShortenStatusProperties = {
 /**
  *  Shorten URL using v2 API
  */
-async function shortenUrl({
-  apiBody,
-  hostUrl,
-}: ShortUrlActionBodyProperties): Promise<
-  SuccessfulShortenStatusProperties | ApiErroredProperties
-> {
+export async function shortenUrl(
+  params: ShortUrlActionBodyProperties
+): Promise<SuccessfulShortenStatusProperties | ApiErroredProperties> {
+  const { apiBody, hostUrl } = params;
+  const { apikey, target, customurl = '', password = '', reuse = false, domain = '' } = apiBody;
+  
+  // Loggo i dati della richiesta per il debug
+  console.log('Richiesta API URL shortenUrl:', {
+    url: `${hostUrl}/api/v2/links`,
+    customurl,
+    target,
+    domain
+  });
+  
   try {
-    const {apikey, ...otherParams} = apiBody;
-
-    const {data}: {data: ShortenLinkResponseProperties} = await axios({
+    // Utilizzo il parametro 'customurl' che è quello corretto per l'API di Kutt/Linkt
+    const requestData = {
+      target,
+      ...(customurl && { customurl }), // Parametro customurl corretto
+      ...(password && { password }),
+      ...(domain && { domain }),
+      reuse,
+    };
+    
+    console.log('Dati della richiesta API:', requestData);
+    
+    const { data } = await axios({
       method: 'POST',
-      timeout: constants.SHORTEN_URL_TIMEOUT,
       url: `${hostUrl}/api/v2/links`,
       headers: {
         'X-API-Key': apikey,
+        'Content-Type': 'application/json',
       },
-      data: {
-        ...otherParams,
-      },
+      data: requestData,
     });
-
-    return {
-      error: false,
-      data,
-    };
-  } catch (err: any) {
-    if (err.response) {
-      if (err.response.status === 401) {
-        return {
-          error: true,
-          message: 'Error: Invalid API Key',
-        };
-      }
-
-      // server request validation errors
-      if (
-        err.response.status === 400 &&
-        Object.prototype.hasOwnProperty.call(err.response.data, 'error')
-      ) {
-        return {
-          error: true,
-          message: `Error: ${err.response.data.error}`,
-        };
-      }
-
-      // ToDo: remove in the next major update
-      if (err.response.status === 404) {
-        return {
-          error: true,
-          message:
-            'Error: This extension now uses API v2, please update your kutt.it instance.',
-        };
-      }
-    }
-
-    if (err.code === 'ECONNABORTED') {
-      return {
-        error: true,
-        message: 'Error: Timed out',
-      };
-    }
-
+    
+    console.log('Risposta API:', data);
+    
+    return { error: false, data };
+  } catch (error: any) {
+    console.error('Error shortening URL:', error?.response?.data || error);
+    console.error('Dettagli richiesta fallita:', {
+      target,
+      customurl,
+      password: password ? '[PASSWORD PRESENTE]' : '[NESSUNA PASSWORD]',
+      domain,
+      reuse
+    });
+    
     return {
       error: true,
-      message: 'Error: Something went wrong',
+      message: error?.response?.data?.error || error?.message || 'Impossibile accorciare l\'URL',
     };
   }
 }

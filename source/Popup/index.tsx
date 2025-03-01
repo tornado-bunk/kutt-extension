@@ -9,9 +9,7 @@ import {ExtensionSettingsProvider} from '../contexts/extension-settings-context'
 import {RequestStatusProvider} from '../contexts/request-status-context';
 import Popup from './Popup';
 
-// eslint-disable-next-line import/no-webpack-loader-syntax, import/no-unresolved,  @typescript-eslint/no-var-requires, node/no-missing-require
-const theme = require('sass-extract-loader?{"plugins": ["sass-extract-js"]}!../styles/base/_variables.scss');
-// Require sass variables using sass-extract-loader and specify the plugin
+import theme from '../styles/base/_variables.module.scss';
 
 ReactDOM.render(
   <ThemeProvider theme={theme}>

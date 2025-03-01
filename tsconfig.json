@@ -13,9 +13,12 @@
 		/* Additional Checks */
 		"useDefineForClassFields": true,
 		"skipLibCheck": true,
-		"jsx": "react"
+		"jsx": "react",
+		"allowSyntheticDefaultImports": true,
+		"moduleResolution": "node"
 	},
 	"include": [
+		"src/scss-modules.d.ts",
 		"source",
 		"twin.d.ts",
 		"cssprop.d.ts",

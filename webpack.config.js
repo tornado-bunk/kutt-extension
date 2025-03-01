@@ -9,7 +9,7 @@ const ExtensionReloader = require('webpack-ext-reloader');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const WextManifestWebpackPlugin = require('wext-manifest-webpack-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
-const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 
 const viewsPath = path.join(__dirname, 'views');
 const sourcePath = path.join(__dirname, 'source');
@@ -54,7 +54,7 @@ module.exports = {
     hash: true,
   },
 
-  mode: nodeEnv,
+  mode: 'development',
 
   entry: {
     manifest: path.join(sourcePath, 'manifest.json'),
@@ -99,32 +99,20 @@ module.exports = {
       {
         test: /\.(sa|sc|c)ss$/,
         use: [
+          MiniCssExtractPlugin.loader,
           {
-            loader: MiniCssExtractPlugin.loader, // It creates a CSS file per JS file which contains CSS
-          },
-          {
-            loader: 'css-loader', // Takes the CSS files and returns the CSS with imports and url(...) for Webpack
+            loader: 'css-loader',
             options: {
-              sourceMap: true,
-            },
+              modules: {
+                auto: true,
+                localIdentName: '[name]__[local]--[hash:base64:5]',
+                exportLocalsConvention: 'camelCaseOnly'
+              }
+            }
           },
-          {
-            loader: 'postcss-loader',
-            options: {
-              postcssOptions: {
-                plugins: [
-                  [
-                    'autoprefixer',
-                    {
-                      // Options
-                    },
-                  ],
-                ],
-              },
-            },
-          },
-          'resolve-url-loader', // Rewrites relative paths in url() statements
-          'sass-loader', // Takes the Sass/SCSS file and compiles to the CSS
+          'postcss-loader',
+          'resolve-url-loader',
+          'sass-loader'
         ],
       },
     ],
@@ -182,36 +170,18 @@ module.exports = {
   ],
 
   optimization: {
-    minimize: true,
+    minimize: process.env.NODE_ENV === 'production',
     minimizer: [
       new TerserPlugin({
+        extractComments: false,
         parallel: true,
         terserOptions: {
           format: {
             comments: false,
           },
         },
-        extractComments: false,
       }),
-      new OptimizeCSSAssetsPlugin({
-        cssProcessorPluginOptions: {
-          preset: ['default', {discardComments: {removeAll: true}}],
-        },
-      }),
-      new FilemanagerPlugin({
-        events: {
-          onEnd: {
-            archive: [
-              {
-                format: 'zip',
-                source: path.join(destPath, targetBrowser),
-                destination: `${path.join(destPath, targetBrowser)}.${getExtensionFileType(targetBrowser)}`,
-                options: {zlib: {level: 6}},
-              },
-            ],
-          },
-        },
-      }),
+      new CssMinimizerPlugin(),
     ],
   },
 };
