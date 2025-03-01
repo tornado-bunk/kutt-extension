@@ -1,6 +1,13 @@
 <div align="center"><img width="150" src="source/assets/logo.png" /></div>
 <h1 align="center">kutt-extension</h1>
 <p align="center">Browser extension for <a href="https://kutt.it">Kutt.it</a></p>
+
+<div align="center">
+  <strong>⚠️ AI ASSISTED UPDATE ⚠️</strong>
+  <p>Questa versione è stata aggiornata con l'assistenza di AI per garantire la compatibilità con le implementazioni più recenti dell'API Kutt v2.</p>
+  <p>I domini personalizzati sono stati temporaneamente disabilitati per evitare errori API, mentre tutte le altre funzionalità sono operative.</p>
+</div>
+
 <div align="center">
   <a href="https://travis-ci.com/thedevs-network/kutt-extension">
     <img src="https://travis-ci.com/thedevs-network/kutt-extension.svg?branch=master" alt="Travis Build" />
@@ -22,6 +29,15 @@
   </a>
 </div>
 <hr />
+
+## 🚀 Recent Updates
+
+Questa versione include i seguenti miglioramenti:
+- ✅ Corretta la funzione shortenUrl per utilizzare il parametro 'customurl' invece di 'address'
+- ⚠️ Disabilitati i domini personalizzati per evitare errori API
+- 📝 Aggiunto logging dettagliato per facilitare il debug
+- 🛠️ Migliorata la gestione degli errori nell'interfaccia utente
+- ✅ Verificata la compatibilità con Firefox e server Kutt selfhosted
 
 ❤️ it? ⭐️ it on [GitHub](https://github.com/thedevs-network/kutt-extension/stargazers)
 
@@ -74,7 +90,7 @@
 - <a href="https://kutt.it">Kutt.it</a> API permits **50** URLs shortening per day using the API Key.
 - **Enable Custom Host** option to use with self-hosted kutt
   - Save the self hosted domain in the input (eg: <https://mykutt.it>)
-    - **Note**: the api endpoint is automatically appended during the api call.
+    - **Note**: la funzione custom domain è temporaneamente disabilitata in questa versione a causa di problemi di compatibilità API.
 - _Delay at times while shortening might be the issue with Kutt.it API and not with the extension's._
 
 ## Contributing and Support
